@@ -1,5 +1,4 @@
 # syntax=docker/dockerfile:1.7
-# Use Node LTS for Metallic
 FROM node:20
 
 WORKDIR /app
@@ -7,21 +6,26 @@ WORKDIR /app
 # Install pnpm
 RUN npm install -g pnpm
 
-# Copy dependencies first
+# --- Fix PNPM blocking the RH install script ---
+RUN pnpm config set ignore-scripts false
+RUN pnpm config set enable-pre-post-scripts true
+
+# Copy dependency files
 COPY package.json pnpm-lock.yaml* ./
 
-# Install
-RUN pnpm config set ignore-scripts false
+# Install dependencies AND allow RH & esbuild to run their scripts
+RUN pnpm approve-builds --auto
 RUN pnpm install --frozen-lockfile
 
-# Copy the full project
+# Copy full project
 COPY . .
 
-# Build WITHOUT running test suite
+# --- Fix Rammerhead missing cache folder (PNPM + symlinks bug) ---
+RUN mkdir -p node_modules/@rubynetwork/rh/cache-js
+
+# Build project
 RUN npx tsc && npx vite build
 
-# Metallic's server runs with index.ts
 EXPOSE 3000
 
-# Start server WITHOUT tests
 CMD ["tsx", "index.ts"]
