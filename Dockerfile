@@ -16,7 +16,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Build WITHOUT running test suite
-RUN tsc && vite build
+RUN npx tsc && npx vite build
 
 # Metallic's server runs with index.ts
 EXPOSE 3000
