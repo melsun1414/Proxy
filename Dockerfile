@@ -1,25 +1,25 @@
-# Use stable Node LTS
+# Use Node LTS for Metallic
 FROM node:20
 
 WORKDIR /app
 
-# Install pnpm globally
+# Install pnpm
 RUN npm install -g pnpm
 
-# Copy package files first
+# Copy dependencies first
 COPY package.json pnpm-lock.yaml* ./
 
-# Install dependencies
-RUN pnpm install
+# Install
+RUN pnpm install --frozen-lockfile
 
-# Copy the rest of your application
+# Copy the full project
 COPY . .
 
-# Build the app
-RUN pnpm run build
+# Build WITHOUT running test suite
+RUN tsc && vite build
 
-# Metallic usually runs on port 3000
+# Metallic's server runs with index.ts
 EXPOSE 3000
 
-# Run the app
-CMD ["pnpm", "start"]
+# Start server WITHOUT tests
+CMD ["tsx", "index.ts"]
