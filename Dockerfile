@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.7
 # Use Node LTS for Metallic
 FROM node:20
 
