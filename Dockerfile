@@ -1,4 +1,6 @@
-# syntax=docker/dockerfile:1.7
+syntax=docker/dockerfile:1.7
+disable remote cache
+no-cache
 FROM node:20
 
 WORKDIR /app
