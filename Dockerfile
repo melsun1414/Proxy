@@ -11,13 +11,13 @@ RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml* ./
 
 # Install
+RUN pnpm config set ignore-scripts false
 RUN pnpm install --frozen-lockfile
 
 # Copy the full project
 COPY . .
 
 # Build WITHOUT running test suite
-RUN mkdir -p node_modules/@rubynetwork/rh/cache-js
 RUN npx tsc && npx vite build
 
 # Metallic's server runs with index.ts
