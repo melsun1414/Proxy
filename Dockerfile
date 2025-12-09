@@ -17,6 +17,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Build WITHOUT running test suite
+RUN mkdir -p node_modules/@rubynetwork/rh/cache-js
 RUN npx tsc && npx vite build
 
 # Metallic's server runs with index.ts
